@@ -1,5 +1,3 @@
-"""API test configuration and fixtures."""
-
 import pytest
 from asgi_lifespan import LifespanManager
 from httpx import ASGITransport, AsyncClient

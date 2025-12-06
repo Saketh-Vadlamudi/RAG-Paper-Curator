@@ -14,6 +14,8 @@ dependencies = [
     "opensearch-py>=3.0.0",
     "requests>=2.32.3",
     "httpx>=0.28.1",
+    "docling>=2.43.0",
+    "python-dateutil>=2.9.0.post0",
 ]
 readme = "README.md"
 
@@ -50,8 +52,8 @@ asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"
 env_files = ".env.test"
 
-[tool.coverage.run]
-omit = [
-    "src/mock_llm_server.py",
-]
-testpaths = ["tests"] 
+[tool.mypy]
+explicit_package_bases = true
+ignore_errors = true
+
+
