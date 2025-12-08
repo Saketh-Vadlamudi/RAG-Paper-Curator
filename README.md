@@ -12,7 +12,7 @@
   <img src="https://img.shields.io/badge/FastAPI-0.115+-green.svg" alt="FastAPI">
   <img src="https://img.shields.io/badge/OpenSearch-2.19-orange.svg" alt="OpenSearch">
   <img src="https://img.shields.io/badge/Docker-Compose-blue.svg" alt="Docker">
-  <img src="https://img.shields.io/badge/Status-Week%202%20Ready-brightgreen.svg" alt="Status">
+  <img src="https://img.shields.io/badge/Status-Week%203%20Keyword%20Search-brightgreen.svg" alt="Status">
 </p>
 
 </br>
@@ -27,9 +27,11 @@
 
 This is a **learner-focused project** where you'll build a complete research assistant system that automatically fetches academic papers, understands their content, and answers your research questions using advanced RAG techniques.
 
-**The arXiv Paper Curator** will teach you to build a **production-grade RAG system using industry best practices**. You'll master the architecture, implementation, and deployment of AI systems that professionals use in the real world.
+**The arXiv Paper Curator** will teach you to build a **production-grade RAG system using industry best practices**. Unlike tutorials that jump straight to vector search, we follow the **professional path**: master keyword search foundations first, then enhance with vectors for hybrid retrieval.
 
-By the end of this course, you'll have your own AI research assistant and the skills to build similar systems for any domain.
+> **🎯 The Professional Difference:** We build RAG systems the way successful companies do - solid search foundations enhanced with AI, not AI-first approaches that ignore search fundamentals.
+
+By the end of this course, you'll have your own AI research assistant and the deep technical skills to build production RAG systems for any domain.
 
 ---
 
@@ -46,14 +48,45 @@ By the end of this course, you'll have your own AI research assistant and the sk
 ```bash
 # 1. Clone and setup
 git clone <repository-url>
-cd zero_to_RAG
+cd arxiv-paper-curator
+
+# 2. Configure environment (IMPORTANT!)
+cp .env.example .env
+# The .env file contains all necessary configuration for OpenSearch, 
+# arXiv API, and service connections. Defaults work out of the box.
+
+# 3. Install dependencies
 uv sync
 
-# 2. Start all services
+# 4. Start all services
 docker compose up --build -d
 
-# 3. Verify everything works
+# 5. Verify everything works
 curl http://localhost:8000/health
+```
+
+### **📚 Weekly Learning Path**
+
+| Week | Topic | Blog Post | Code Release |
+|------|-------|-----------|--------------|
+| **Week 0** | The Mother of AI project - 6 phases | [The Mother of AI project](https://jamwithai.substack.com/p/the-mother-of-ai-project) | - |
+| **Week 1** | Infrastructure Foundation | [The Infrastructure That Powers RAG Systems](https://jamwithai.substack.com/p/the-infrastructure-that-powers-rag) | [week1.0](https://github.com/jamwithai/arxiv-paper-curator/releases/tag/week1.0) |
+| **Week 2** | Data Ingestion Pipeline | [Building Data Ingestion Pipelines for RAG](https://jamwithai.substack.com/p/bringing-your-rag-system-to-life) | [week2.0](https://github.com/jamwithai/arxiv-paper-curator/releases/tag/week2.0) |
+| **Week 3** | **The Search Foundation Every RAG System Needs** | [The Search Foundation Every RAG System Needs](https://jamwithai.substack.com/p/the-search-foundation-every-rag-system) | _Coming Soon_ |
+| **Week 4** | Chunking & Hybrid Retrieval | _Coming Soon_ | _Coming Soon_ |
+| **Week 5** | Full RAG Pipeline | _Coming Soon_ | _Coming Soon_ |
+| **Week 6** | Setting up evals | _Coming Soon_ | _Coming Soon_ |
+
+**📥 Clone a specific week's release:**
+```bash
+# Clone a specific week's code
+git clone --branch <WEEK_TAG> https://github.com/jamwithai/arxiv-paper-curator
+cd arxiv-paper-curator
+uv sync
+docker compose down -v
+docker compose up --build -d
+
+# Replace <WEEK_TAG> with: week1.0, week2.0, etc.
 ```
 
 ### **📊 Access Your Services**
@@ -201,15 +234,165 @@ Complete when you can:
 
 ---
 
-## 📚 Future Weeks: Complete RAG System
+## 📚 Week 3: Keyword Search First - The Critical Foundation ⚡
 
-**Building on Weeks 1-2 foundation:** Advanced RAG techniques and production deployment.
+> **🚨 The 90% Problem:** Most RAG systems jump straight to vector search and miss the foundation that powers the best retrieval systems. We're doing it right!
 
-### **Future Weeks Overview** (6-Week Course)
-- **Week 3:** OpenSearch hybrid search implementation with BM25 + semantic vectors
-- **Week 4:** Context-aware chunking and retrieval evaluation with nDCG metrics
+**Building on Weeks 1-2 foundation:** Implement the keyword search foundation that professional RAG systems rely on.
+
+### **🎯 Why Keyword Search First?**
+
+**The Reality Check:** Vector search alone is not enough. The most effective RAG systems use **hybrid retrieval** - combining keyword search (BM25) with vector search. Here's why we start with keywords:
+
+1. **🔍 Exact Match Power:** Keywords excel at finding specific terms, technical jargon, and precise phrases
+2. **📊 Interpretable Results:** You can understand exactly why a document was retrieved  
+3. **⚡ Speed & Efficiency:** BM25 is computationally fast and doesn't require expensive embedding models
+4. **🎯 Domain Knowledge:** Technical papers often require exact terminology matches that vector search might miss
+5. **📈 Production Reality:** Companies like Elasticsearch, Algolia, and enterprise search all use keyword search as their foundation
+
+### **🏗️ Week 3 Architecture Overview**
+
+<p align="center">
+  <img src="static/week3_opensearch_flow.png" alt="Week 3 OpenSearch Flow Architecture" width="800">
+  <br>
+  <em>Complete Week 3 architecture showing the OpenSearch integration flow</em>
+</p>
+
+**Search Infrastructure:** Master full-text search with OpenSearch before adding vector complexity.
+
+#### **🎯 Learning Objectives**
+- **Foundation First:** Why keyword search is essential for RAG systems
+- **OpenSearch Mastery:** Index management, mappings, and search optimization
+- **BM25 Algorithm:** Understanding the math behind effective keyword search
+- **Query DSL:** Building complex search queries with filters and boosting
+- **Search Analytics:** Measuring search relevance and performance
+- **Production Patterns:** How real companies structure their search systems
+
+#### **Key Components**
+- `src/services/opensearch/`: Professional search service implementation
+- `src/routers/search.py`: Search API endpoints with BM25 scoring
+- `notebooks/week3/`: Complete OpenSearch integration guide  
+- **Search Quality Metrics:** Precision, recall, and relevance scoring
+
+#### **💡 The Pedagogical Approach**
+```
+Week 3: Master keyword search (BM25) ← YOU ARE HERE
+Week 4: Add intelligent chunking strategies  
+Week 5: Introduce vector embeddings for hybrid retrieval
+Week 6: Optimize the complete hybrid system
+```
+
+**This progression mirrors how successful companies build search systems - solid foundation first, then enhance with advanced techniques.**
+
+### **📓 Week 3 Implementation Guide**
+
+```bash
+# Launch the Week 3 notebook
+uv run jupyter notebook notebooks/week3/week3_opensearch.ipynb
+```
+
+### **💻 Code Examples**
+
+**BM25 Search Implementation:**
+```python
+# Example: Search papers with BM25 scoring
+from src.services.opensearch.factory import make_opensearch_client
+
+async def search_papers():
+    client = make_opensearch_client()
+    results = await client.search_papers(
+        query="transformer attention mechanism",
+        max_results=10,
+        categories=["cs.AI", "cs.LG"]
+    )
+    return results  # Papers ranked by BM25 relevance
+```
+
+**Search API Usage:**
+```python
+# Example: Use the search endpoint
+import httpx
+
+async def query_papers():
+    async with httpx.AsyncClient() as client:
+        response = await client.post("http://localhost:8000/api/v1/search", json={
+            "query": "neural networks optimization",
+            "max_results": 5,
+            "latest_papers": True
+        })
+        return response.json()
+```
+
+### **✅ Success Criteria**
+Complete when you can:
+- [ ] Index papers in OpenSearch: Papers searchable via OpenSearch Dashboards
+- [ ] Search via API: `/search` endpoint returns relevant papers with BM25 scoring
+- [ ] Filter by categories: Search within specific arXiv categories (cs.AI, cs.LG, etc.)
+- [ ] Sort by relevance or date: Toggle between BM25 scoring and latest papers
+- [ ] View search analytics: Understanding why papers matched your query
+
+### **Future Weeks Overview** (Weeks 4-6)
+- **Week 4:** Chunking strategies and hybrid retrieval (combining keyword + vector search)
 - **Week 5:** Full RAG pipeline with LLM integration and prompt optimization
-- **Week 6:** Observability with Langfuse, A/B testing, and production deployment
+- **Week 6:** Observability with Langfuse and evaluation systems
+
+---
+
+## ⚙️ Configuration Management
+
+### **Environment Configuration**
+
+The project uses a **unified `.env` file** with nested configuration structure to manage settings across all services.
+
+#### **Configuration Structure**
+```bash
+# Application Settings
+DEBUG=true
+ENVIRONMENT=development
+
+# arXiv API (Week 2)
+ARXIV__MAX_RESULTS=15
+ARXIV__SEARCH_CATEGORY=cs.AI
+ARXIV__RATE_LIMIT_DELAY=3.0
+
+# PDF Parser (Week 2)  
+PDF_PARSER__MAX_PAGES=30
+PDF_PARSER__DO_OCR=false
+
+# OpenSearch (Week 3)
+OPENSEARCH__HOST=http://opensearch:9200
+OPENSEARCH__INDEX_NAME=arxiv-papers
+
+# Services
+OLLAMA_HOST=http://ollama:11434
+OLLAMA_MODEL=llama3.2:1b
+```
+
+#### **Key Configuration Variables**
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `DEBUG` | `true` | Debug mode for development |
+| `ARXIV__MAX_RESULTS` | `15` | Papers to fetch per API call |
+| `ARXIV__SEARCH_CATEGORY` | `cs.AI` | arXiv category to search |
+| `PDF_PARSER__MAX_PAGES` | `30` | Max pages to process per PDF |
+| `OPENSEARCH__INDEX_NAME` | `arxiv-papers` | OpenSearch index name |
+| `OPENSEARCH__HOST` | `http://opensearch:9200` | OpenSearch cluster endpoint |
+| `OLLAMA_MODEL` | `llama3.2:1b` | Local LLM model |
+
+#### **Service-Aware Configuration**
+
+The configuration system automatically detects the service context:
+- **API Service**: Uses `localhost` for database and service connections
+- **Airflow Service**: Uses Docker container hostnames (`postgres`, `opensearch`)
+
+```python
+# Configuration is automatically loaded based on context
+from src.config import get_settings
+
+settings = get_settings()  # Auto-detects API vs Airflow
+print(f"ArXiv max results: {settings.arxiv.max_results}")
+```
 
 ---
 
@@ -230,17 +413,30 @@ Complete when you can:
 ### **🏗️ Project Structure**
 
 ```
-zero_to_RAG/
+arxiv-paper-curator/
 ├── src/                                    # Main application code
 │   ├── main.py                             # FastAPI application
 │   ├── routers/                            # API endpoints
+│   │   ├── ping.py                         # Health check endpoints
+│   │   ├── papers.py                       # Paper retrieval endpoints
+│   │   └── search.py                       # 🆕 NEW: BM25 search endpoints
 │   ├── models/                             # Database models (SQLAlchemy)
 │   ├── repositories/                       # Data access layer
 │   ├── schemas/                            # Pydantic validation schemas
+│   │   ├── api/                            # API request/response schemas
+│   │   │   ├── health.py                   # Health check schemas
+│   │   │   └── search.py                   # 🆕 NEW: Search request/response schemas
+│   │   ├── arxiv/                          # arXiv data schemas
+│   │   └── pdf_parser/                     # PDF parsing schemas
 │   ├── services/                           # Business logic
-│   │   ├── arxiv/                          # ✨ NEW: arXiv API client
-│   │   ├── pdf_parser/                     # ✨ NEW: Docling PDF processing
-│   │   ├── metadata_fetcher.py             # ✨ NEW: Complete ingestion pipeline
+│   │   ├── arxiv/                          # arXiv API client
+│   │   ├── pdf_parser/                     # Docling PDF processing
+│   │   ├── opensearch/                     # 🆕 NEW: OpenSearch integration
+│   │   │   ├── client.py                   # OpenSearch client implementation
+│   │   │   ├── factory.py                  # Client factory pattern
+│   │   │   ├── index_config.py             # Index configuration
+│   │   │   └── query_builder.py            # BM25 query construction
+│   │   ├── metadata_fetcher.py             # Complete ingestion pipeline
 │   │   └── ollama/                         # Ollama LLM service
 │   ├── db/                                 # Database configuration
 │   ├── config.py                           # Environment configuration
@@ -249,14 +445,16 @@ zero_to_RAG/
 ├── notebooks/                              # Learning materials
 │   ├── week1/                              # Week 1: Infrastructure setup
 │   │   └── week1_setup.ipynb               # Complete setup guide
-│   └── week2/                              # ✨ NEW: Week 2 materials
-│       └── week2_data_ingestion.ipynb      # Data pipeline guide
+│   ├── week2/                              # Week 2: Data ingestion
+│   │   └── week2_arxiv_integration.ipynb   # Data pipeline guide
+│   └── week3/                              # 🆕 NEW: Keyword search
+│       └── week3_opensearch.ipynb          # OpenSearch & BM25 guide
 │
 ├── airflow/                                # Workflow orchestration
 │   ├── dags/                               # Workflow definitions
-│   │   ├── arxiv_ingestion/                # ✨ NEW: arXiv ingestion modules
-│   │   └── arxiv_paper_ingestion.py        # ✨ NEW: Main ingestion DAG
-│   └── requirements-airflow.txt            # ✨ NEW: Airflow dependencies
+│   │   ├── arxiv_ingestion/                # arXiv ingestion modules
+│   │   └── arxiv_paper_ingestion.py        # Main ingestion DAG
+│   └── requirements-airflow.txt            # Airflow dependencies
 │
 ├── tests/                                  # Comprehensive test suite
 ├── static/                                 # Assets (images, GIFs)
