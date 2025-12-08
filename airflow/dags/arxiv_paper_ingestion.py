@@ -3,14 +3,12 @@ from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
+from arxiv_ingestion.fetching import fetch_daily_papers
+from arxiv_ingestion.indexing import index_papers_hybrid, verify_hybrid_index
+from arxiv_ingestion.reporting import generate_daily_report
 
-# Import task functions from separate module
-from arxiv_ingestion.tasks import (
-    fetch_daily_papers,
-    generate_daily_report,
-    index_papers_to_opensearch,
-    setup_environment,
-)
+# Import task functions from modular structure
+from arxiv_ingestion.setup import setup_environment
 
 # Default DAG arguments
 default_args = {
@@ -28,11 +26,11 @@ default_args = {
 dag = DAG(
     "arxiv_paper_ingestion",
     default_args=default_args,
-    description="Daily arXiv CS.AI paper pipeline: fetch → store to PostgreSQL → index to OpenSearch",
+    description="Daily arXiv CS.AI paper pipeline: fetch → store to PostgreSQL → chunk & embed → hybrid OpenSearch indexing",
     schedule="0 6 * * 1-5",  # Monday-Friday at 6 AM UTC
     max_active_runs=1,
     catchup=False,
-    tags=["arxiv", "papers", "ingestion", "opensearch", "week3"],
+    tags=["arxiv", "papers", "ingestion", "hybrid-search", "embeddings", "chunks"],
 )
 
 # Task definitions
@@ -48,9 +46,10 @@ fetch_task = PythonOperator(
     dag=dag,
 )
 
-opensearch_task = PythonOperator(
-    task_id="index_papers_to_opensearch",
-    python_callable=index_papers_to_opensearch,
+# Hybrid search indexing task (replaces old OpenSearch task)
+index_hybrid_task = PythonOperator(
+    task_id="index_papers_hybrid",
+    python_callable=index_papers_hybrid,
     dag=dag,
 )
 
@@ -72,5 +71,5 @@ cleanup_task = BashOperator(
 )
 
 # Task dependencies
-# Main pipeline: setup -> fetch -> opensearch -> report -> cleanup
-setup_task >> fetch_task >> opensearch_task >> report_task >> cleanup_task
+# Simplified pipeline: setup -> fetch -> hybrid index -> report -> cleanup
+setup_task >> fetch_task >> index_hybrid_task >> report_task >> cleanup_task

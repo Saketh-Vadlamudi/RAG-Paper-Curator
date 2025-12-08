@@ -68,7 +68,7 @@ class MetadataFetcher:
         db_session: Optional[Session] = None,
         index_to_opensearch: bool = False,
     ) -> Dict[str, Any]:
-        """Fetch papers from arXiv, process PDFs, and store to database and OpenSearch.
+        """Fetch papers from arXiv, process PDFs, and store to database.
 
         :param max_results: Maximum papers to fetch
         :param from_date: Filter papers from this date (YYYYMMDD)
@@ -76,14 +76,12 @@ class MetadataFetcher:
         :param process_pdfs: Whether to download and parse PDFs
         :param store_to_db: Whether to store results in database
         :param db_session: Database session (required if store_to_db=True)
-        :param index_to_opensearch: Whether to index papers in OpenSearch
         :type max_results: Optional[int]
         :type from_date: Optional[str]
         :type to_date: Optional[str]
         :type process_pdfs: bool
         :type store_to_db: bool
         :type db_session: Optional[Session]
-        :type index_to_opensearch: bool
         :returns: Dictionary with processing results and statistics
         :rtype: Dict[str, Any]
         """
@@ -208,8 +206,17 @@ class MetadataFetcher:
                 logger.error(error_msg)
                 results["errors"].append(error_msg)
             elif result:
-                # Result is tuple: (download_success, parsed_paper)
-                download_success, parsed_paper = result
+                # Check if result is a tuple before unpacking
+                # Handle AirflowTaskTerminated and other non-tuple results
+                if isinstance(result, tuple) and len(result) == 2:
+                    # Result is tuple: (download_success, parsed_paper)
+                    download_success, parsed_paper = result
+                else:
+                    # Result is not a tuple (could be AirflowTaskTerminated or other error)
+                    error_msg = f"Pipeline error for {paper.arxiv_id}: Unexpected result type {type(result).__name__}"
+                    logger.error(error_msg)
+                    results["errors"].append(error_msg)
+                    continue
 
                 if download_success:
                     results["downloaded"] += 1
@@ -473,12 +480,10 @@ def make_metadata_fetcher(
 
     :param arxiv_client: Client for arXiv API operations
     :param pdf_parser: Service for parsing PDF documents
-    :param opensearch_client: Optional OpenSearch client for indexing
     :param pdf_cache_dir: Directory for caching downloaded PDFs
     :param settings: Application settings instance (uses default if None)
     :type arxiv_client: ArxivClient
     :type pdf_parser: PDFParserService
-    :type opensearch_client: Optional[OpenSearchClient]
     :type pdf_cache_dir: Optional[Path]
     :type settings: Optional[Settings]
     :returns: Configured MetadataFetcher instance
