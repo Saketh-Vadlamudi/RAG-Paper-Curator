@@ -8,12 +8,6 @@ from ..services.ollama import OllamaClient
 router = APIRouter()
 
 
-@router.get("/ping", tags=["Health"])
-async def ping():
-    """Simple ping endpoint for basic connectivity tests."""
-    return {"status": "ok", "message": "pong"}
-
-
 @router.get("/health", response_model=HealthResponse, tags=["Health"])
 async def health_check(settings: SettingsDep, database: DatabaseDep, opensearch_client: OpenSearchDep) -> HealthResponse:
     """Comprehensive health check endpoint for monitoring and load balancer probes.
