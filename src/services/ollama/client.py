@@ -157,7 +157,7 @@ class OllamaClient:
         query: str,
         chunks: List[Dict[str, Any]],
         model: str = "llama3.2",
-        use_structured_output: bool = True,
+        use_structured_output: bool = False,
     ) -> Dict[str, Any]:
         """
         Generate a RAG answer using retrieved chunks.
@@ -185,47 +185,47 @@ class OllamaClient:
                     format=prompt_data["format"],
                 )
             else:
-                # Fallback to JSON mode
+                # Fallback to plain text mode
                 prompt = self.prompt_builder.create_rag_prompt(query, chunks)
 
-                # Generate with JSON format instruction
+                # Generate without format restrictions
                 response = await self.generate(
                     model=model,
                     prompt=prompt,
                     temperature=0.7,
                     top_p=0.9,
-                    format="json",
                 )
 
             if response and "response" in response:
-                # Parse the LLM response
-                logger.debug(f"Raw LLM response: {response['response'][:500]}")
-                parsed_response = self.response_parser.parse_structured_response(response["response"])
-                logger.debug(f"Parsed response: {parsed_response}")
+                answer_text = response["response"]
+                logger.debug(f"Raw LLM response: {answer_text[:500]}")
 
-                # Ensure sources are included if not already
-                if not parsed_response.get("sources"):
-                    # Build PDF URLs from arxiv_ids
+                if use_structured_output:
+                    # Try to parse structured response if enabled
+                    parsed_response = self.response_parser.parse_structured_response(answer_text)
+                    logger.debug(f"Parsed response: {parsed_response}")
+                    return parsed_response
+                else:
+                    # For plain text response, build simple response structure
                     sources = []
                     seen_urls = set()
                     for chunk in chunks:
                         arxiv_id = chunk.get("arxiv_id")
                         if arxiv_id:
-                            # Build PDF URL from arxiv_id
                             arxiv_id_clean = arxiv_id.split("v")[0] if "v" in arxiv_id else arxiv_id
                             pdf_url = f"https://arxiv.org/pdf/{arxiv_id_clean}.pdf"
                             if pdf_url not in seen_urls:
                                 sources.append(pdf_url)
                                 seen_urls.add(pdf_url)
-                    parsed_response["sources"] = sources
 
-                # Add citations if not present
-                if not parsed_response.get("citations"):
-                    # Extract unique arxiv IDs
                     citations = list(set(chunk.get("arxiv_id") for chunk in chunks if chunk.get("arxiv_id")))
-                    parsed_response["citations"] = citations[:5]  # Limit to 5 citations
 
-                return parsed_response
+                    return {
+                        "answer": answer_text,
+                        "sources": sources,
+                        "confidence": "medium",
+                        "citations": citations[:5],
+                    }
             else:
                 raise OllamaException("No response generated from Ollama")
 
