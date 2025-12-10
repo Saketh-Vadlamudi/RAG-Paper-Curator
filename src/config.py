@@ -105,6 +105,47 @@ class OpenSearchSettings(BaseConfigSettings):
     hybrid_search_size_multiplier: int = 2  # Get k*multiplier for better recall
 
 
+class LangfuseSettings(BaseConfigSettings):
+    model_config = SettingsConfigDict(
+        env_file=[".env", str(ENV_FILE_PATH)],
+        env_prefix="LANGFUSE__",
+        extra="ignore",
+        frozen=True,
+        case_sensitive=False,
+    )
+
+    public_key: str = ""
+    secret_key: str = ""
+    host: str = "http://localhost:3000"  # Self-hosted Langfuse URL
+    enabled: bool = True
+    flush_at: int = 15  # Number of events before flushing
+    flush_interval: float = 1.0  # Seconds between flushes
+    max_retries: int = 3
+    timeout: int = 30
+    debug: bool = False
+
+
+class RedisSettings(BaseConfigSettings):
+    model_config = SettingsConfigDict(
+        env_file=[".env", str(ENV_FILE_PATH)],
+        env_prefix="REDIS__",
+        extra="ignore",
+        frozen=True,
+        case_sensitive=False,
+    )
+
+    host: str = "localhost"
+    port: int = 6379
+    password: str = ""
+    db: int = 0
+    decode_responses: bool = True
+    socket_timeout: int = 30
+    socket_connect_timeout: int = 30
+
+    # Cache settings
+    ttl_hours: int = 6  # Cache TTL in hours
+
+
 class Settings(BaseConfigSettings):
     app_version: str = "0.1.0"
     debug: bool = True
@@ -127,6 +168,8 @@ class Settings(BaseConfigSettings):
     pdf_parser: PDFParserSettings = Field(default_factory=PDFParserSettings)
     chunking: ChunkingSettings = Field(default_factory=ChunkingSettings)
     opensearch: OpenSearchSettings = Field(default_factory=OpenSearchSettings)
+    langfuse: LangfuseSettings = Field(default_factory=LangfuseSettings)
+    redis: RedisSettings = Field(default_factory=RedisSettings)
 
     @field_validator("postgres_database_url")
     @classmethod

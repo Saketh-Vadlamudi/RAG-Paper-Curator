@@ -54,7 +54,9 @@ class RAGPromptBuilder:
             prompt += f"{chunk_text}\n\n"
 
         prompt += f"### Question:\n{query}\n\n"
-        prompt += "### Answer (cite sources using [arXiv:id] format):\n"
+        prompt += (
+            "### Answer:\nProvide a natural, conversational response (not JSON) and cite sources using [arXiv:id] format.\n\n"
+        )
 
         return prompt
 

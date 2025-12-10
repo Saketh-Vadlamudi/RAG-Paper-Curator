@@ -25,7 +25,7 @@ class HybridSearchRequest(BaseModel):
     min_score: float = Field(0.0, description="Minimum score threshold for results", ge=0.0)
 
     class Config:
-        allow_population_by_field_name = True
+        populate_by_name = True
         json_schema_extra = {
             "example": {
                 "query": "machine learning neural networks",
@@ -67,4 +67,4 @@ class SearchResponse(BaseModel):
     error: Optional[str] = None
 
     class Config:
-        allow_population_by_field_name = True
+        populate_by_name = True
