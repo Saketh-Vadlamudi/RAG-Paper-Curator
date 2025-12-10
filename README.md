@@ -12,7 +12,7 @@
   <img src="https://img.shields.io/badge/FastAPI-0.115+-green.svg" alt="FastAPI">
   <img src="https://img.shields.io/badge/OpenSearch-2.19-orange.svg" alt="OpenSearch">
   <img src="https://img.shields.io/badge/Docker-Compose-blue.svg" alt="Docker">
-  <img src="https://img.shields.io/badge/Status-Week%204%20Hybrid%20Search-brightgreen.svg" alt="Status">
+  <img src="https://img.shields.io/badge/Status-Week%205%20Complete%20RAG-brightgreen.svg" alt="Status">
 </p>
 
 </br>
@@ -38,8 +38,12 @@ By the end of this course, you'll have your own AI research assistant and the de
 - **Week 1:** Complete infrastructure with Docker, FastAPI, PostgreSQL, OpenSearch, and Airflow
 - **Week 2:** Automated data pipeline fetching and parsing academic papers from arXiv  
 - **Week 3:** Production BM25 keyword search with filtering and relevance scoring
-- **Week 4:** ✨ **Intelligent chunking + hybrid search combining keywords with semantic understanding**
+- **Week 4:** Intelligent chunking + hybrid search combining keywords with semantic understanding
+<<<<<<< HEAD
+- **Week 5:** **Complete RAG pipeline with local LLM, streaming responses, and Gradio interface**
+=======
 - **Week 5:** Full RAG pipeline with LLM integration for answer generation
+>>>>>>> c316ef98ee90f476e118a57e2ace1b50f2ad8af1
 - **Week 6:** Evaluation system to measure and improve RAG performance
 
 ---
@@ -83,8 +87,13 @@ curl http://localhost:8000/health
 | **Week 1** | Infrastructure Foundation | [The Infrastructure That Powers RAG Systems](https://jamwithai.substack.com/p/the-infrastructure-that-powers-rag) | [week1.0](https://github.com/jamwithai/arxiv-paper-curator/releases/tag/week1.0) |
 | **Week 2** | Data Ingestion Pipeline | [Building Data Ingestion Pipelines for RAG](https://jamwithai.substack.com/p/bringing-your-rag-system-to-life) | [week2.0](https://github.com/jamwithai/arxiv-paper-curator/releases/tag/week2.0) |
 | **Week 3** | OpenSearch ingestion & BM25 retrieval | [The Search Foundation Every RAG System Needs](https://jamwithai.substack.com/p/the-search-foundation-every-rag-system) | [week3.0](https://github.com/jamwithai/arxiv-paper-curator/releases/tag/week3.0) |
-| **Week 4** | **Chunking & Hybrid Search** | [The Chunking Strategy That Makes Hybrid Search Work](https://jamwithai.substack.com/p/the-chunking-strategy-that-makes-hybrid-search-work) | _Coming Soon_ |
+<<<<<<< HEAD
+| **Week 4** | **Chunking & Hybrid Search** | [The Chunking Strategy That Makes Hybrid Search Work](https://jamwithai.substack.com/p/the-chunking-strategy-that-makes-hybrid-search-work) | [week4.0](https://github.com/jamwithai/arxiv-paper-curator/releases/tag/week4.0) |
+| **Week 5** | **Complete RAG system** | [The Complete RAG System](https://jamwithai.substack.com/p/the-complete-rag-system) | [week5.0](https://github.com/jamwithai/arxiv-paper-curator/releases/tag/week5.0) |
+=======
+| **Week 4** | **Chunking & Hybrid Search** | [Chunking strategies and Hybrid RAG system](https://jamwithai.substack.com/p/chunking-strategies-and-hybrid-rag) | [week4.0](https://github.com/jamwithai/arxiv-paper-curator/releases/tag/week4.0) |
 | **Week 5** | Full RAG Pipeline | _Coming Soon_ | _Coming Soon_ |
+>>>>>>> c316ef98ee90f476e118a57e2ace1b50f2ad8af1
 | **Week 6** | Setting up evals | _Coming Soon_ | _Coming Soon_ |
 
 **📥 Clone a specific week's release:**
@@ -104,6 +113,7 @@ docker compose up --build -d
 | Service | URL | Purpose |
 |---------|-----|---------|
 | **API Documentation** | http://localhost:8000/docs | Interactive API testing |
+| **Gradio RAG Interface** | http://localhost:7861 | User-friendly chat interface |
 | **Airflow Dashboard** | http://localhost:8080 | Workflow management |
 | **OpenSearch Dashboards** | http://localhost:5601 | Hybrid search engine UI |
 
@@ -446,9 +456,203 @@ Complete when you can:
 ### **📖 Deep Dive**  
 **Blog Post:** [The Chunking Strategy That Makes Hybrid Search Work](link-to-week4-blog) - Production chunking and RRF fusion implementation
 
-### **Future Weeks Overview** (Weeks 5-6)
-- **Week 5:** Full RAG pipeline with LLM integration and answer generation
-- **Week 6:** Observability, evaluation, and production optimization
+---
+
+## 📚 Week 5: Complete RAG Pipeline with LLM Integration 🚀
+
+> **🎯 The RAG Completion:** Transform search results into intelligent answers with local LLM integration and streaming responses.
+
+**Building on Week 4 hybrid search:** Add the LLM layer that turns search into intelligent conversation.
+
+### **🎯 Why Local LLM + Streaming?**
+
+**The Production Advantage:** Complete the RAG pipeline with privacy-first, optimized generation:
+
+1. **🏠 Local LLM Control:** Complete data privacy with Ollama - no external API calls
+2. **⚡ 6x Performance Boost:** Optimized from 120s → 15-20s through prompt engineering
+3. **📡 Real-time Streaming:** Server-Sent Events for immediate user feedback
+4. **🎛️ User-Friendly Interface:** Gradio web UI for non-technical users
+5. **🔧 Production Ready:** Clean API design with comprehensive error handling
+
+### **🏗️ Week 5 Architecture Overview**
+
+<p align="center">
+  <img src="static/week5_complete_rag.png" alt="Week 5 Complete RAG System Architecture" width="900">
+  <br>
+  <em>Complete RAG system with LLM generation layer (Ollama), hybrid retrieval pipeline, and Gradio interface</em>
+</p>
+
+**Complete RAG Infrastructure:** Local LLM generation with optimized prompting, dual API endpoints, and interactive web interface.
+
+#### **🎯 Learning Objectives**
+- **Local LLM Mastery:** Ollama service integration with multiple model support
+- **Performance Optimization:** 80% prompt reduction, 6x speed improvement techniques
+- **Streaming Implementation:** Server-Sent Events for real-time response generation
+- **Dual API Design:** Standard and streaming endpoints for different use cases
+- **Interactive UI:** Gradio interface with advanced parameter controls
+
+#### **Key Components**
+- `src/routers/ask.py`: Dual RAG endpoints (`/api/v1/ask` + `/api/v1/stream`)
+- `src/services/ollama/`: LLM client with optimized prompts and 300-word response limits
+- `src/services/ollama/prompts/rag_system.txt`: Optimized system prompt for academic papers
+- `src/gradio_app.py`: Interactive web interface with real-time streaming support
+- `gradio_launcher.py`: Easy-launch script for the web UI (runs on port 7861)
+
+### **📓 Week 5 Implementation Guide**
+
+```bash
+# Launch the Week 5 notebook
+uv run jupyter notebook notebooks/week5/week5_complete_rag_system.ipynb
+
+# Launch Gradio interface
+uv run python gradio_launcher.py
+# Open http://localhost:7861
+```
+
+### **💻 Code Examples**
+
+**Complete RAG Query:**
+```python
+# Example: Standard RAG endpoint
+import httpx
+
+async def ask_question(query: str):
+    async with httpx.AsyncClient() as client:
+        response = await client.post("http://localhost:8000/api/v1/ask", json={
+            "query": query,
+            "top_k": 3,
+            "use_hybrid": True,
+            "model": "llama3.2:1b"
+        })
+        result = response.json()
+        return result["answer"], result["sources"]
+
+# Ask a question
+answer, sources = await ask_question("What are transformers in machine learning?")
+```
+
+**Streaming RAG Implementation:**
+```python
+# Example: Real-time streaming responses
+import httpx
+import json
+
+async def stream_rag_response(query: str):
+    async with httpx.AsyncClient() as client:
+        async with client.stream("POST", "http://localhost:8000/api/v1/stream", json={
+            "query": query,
+            "top_k": 3,
+            "use_hybrid": True
+        }) as response:
+            async for line in response.aiter_lines():
+                if line.startswith('data: '):
+                    data = json.loads(line[6:])
+                    if 'chunk' in data:
+                        print(data['chunk'], end='', flush=True)
+                    elif data.get('done'):
+                        break
+
+# Stream an answer in real-time
+await stream_rag_response("Explain attention mechanisms")
+```
+
+### **🔧 API Endpoints**
+
+**Standard RAG Endpoint:** `/api/v1/ask`
+- **Response Type**: Complete JSON response
+- **Use Case**: Batch processing, API integrations
+- **Response Time**: 15-20 seconds
+
+**Streaming RAG Endpoint:** `/api/v1/stream`
+- **Response Type**: Server-Sent Events (SSE)
+- **Use Case**: Interactive UIs, real-time feedback
+- **Time to First Token**: 2-3 seconds
+
+**Request Format** (both endpoints):
+```json
+{
+    "query": "Your question here",
+    "top_k": 3,                    // Number of chunks (1-10)
+    "use_hybrid": true,            // Hybrid vs BM25 search
+    "model": "llama3.2:1b",        // LLM model to use
+    "categories": ["cs.AI"]        // Optional category filter
+}
+```
+
+### **✅ Success Criteria**
+Complete when you can:
+- [ ] **Standard RAG**: Get complete answers with sources via `/api/v1/ask`
+- [ ] **Streaming RAG**: See real-time generation via `/api/v1/stream`
+- [ ] **Gradio Interface**: Interactive chat at http://localhost:7861
+- [ ] **Performance**: 15-20s total response time (6x improvement from baseline)
+- [ ] **Local LLM**: Ollama running with llama3.2:1b model
+- [ ] **Source Attribution**: Automatic deduplication of paper sources
+
+### **📊 Performance Achievements**
+| Metric | Before | After (Week 5) | Improvement |
+|--------|--------|----------------|-------------|
+| **Response Time** | 120+ seconds | 15-20 seconds | **6x faster** |
+| **Time to First Token** | N/A | 2-3 seconds | **Streaming enabled** |
+| **Prompt Efficiency** | ~10KB | ~2KB | **80% reduction** |
+| **User Experience** | API only | Web interface + streaming | **Production ready** |
+
+**Key Optimizations:**
+- Removed redundant metadata (80% prompt size reduction)
+- 300-word response limit for focused answers
+- Shared code architecture (DRY principles)
+- Automatic source deduplication
+
+### **🔧 Troubleshooting Week 5**
+
+| Issue | Solution |
+|-------|----------|
+| **404 on `/stream` endpoint** | Rebuild API: `docker compose build api && docker compose restart api` |
+| **Slow response times** | Use smaller model (`llama3.2:1b`) or reduce `top_k` parameter |
+| **Gradio not accessible** | Port changed to 7861: `http://localhost:7861` |
+| **Ollama connection errors** | Check service: `docker exec rag-ollama ollama list` |
+| **No streaming response** | Verify SSE format, check browser network tab |
+| **Out of memory errors** | Increase Docker memory limit to 8GB+ |
+
+**Quick Health Check:**
+```bash
+# Check all services
+curl http://localhost:8000/api/v1/health | jq
+
+# Test RAG endpoint
+curl -X POST http://localhost:8000/api/v1/ask \
+  -H "Content-Type: application/json" \
+  -d '{"query": "test", "top_k": 1}'
+
+# Test streaming endpoint
+curl -X POST http://localhost:8000/api/v1/stream \
+  -H "Content-Type: application/json" \
+  -d '{"query": "test", "top_k": 1}' --no-buffer
+```
+
+### **📖 Deep Dive**
+**Blog Post:** [Coming Soon] - Complete RAG system with local LLM integration and optimization techniques
+
+### **🚀 What's Next After Week 5**
+
+With your complete RAG system now operational, consider these enhancements:
+
+**Immediate Improvements:**
+- Experiment with different Ollama models (llama3.2:3b, qwen2.5:7b)
+- Customize the Gradio interface with your branding
+- Add conversation memory for multi-turn dialogues
+- Implement user feedback and rating system
+
+**Production Readiness:**
+- Set up monitoring and alerting
+- Add authentication and rate limiting
+- Implement caching for frequent queries
+- Configure backup and recovery processes
+
+**Advanced Features:**
+- Document upload functionality
+- Multiple knowledge base support
+- Advanced search filters and sorting
+- Export conversations and analytics
 
 ---
 
@@ -487,6 +691,12 @@ EMBEDDINGS__DIMENSIONS=1024
 CHUNKING__CHUNK_SIZE=600
 CHUNKING__OVERLAP_SIZE=100
 CHUNKING__MIN_CHUNK_SIZE=100
+
+# Ollama LLM (Week 5)
+OLLAMA_HOST=http://ollama:11434
+OLLAMA__DEFAULT_MODEL=llama3.2:1b
+OLLAMA__TIMEOUT=120
+OLLAMA__MAX_RESPONSE_WORDS=300
 
 # Services
 OLLAMA_HOST=http://ollama:11434
