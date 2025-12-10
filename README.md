@@ -1,4 +1,4 @@
-# The Mother of AI Project
+# The END-END Production Grade RAG Project
 ## Phase 1 RAG Systems: arXiv Paper Curator
 
 <div align="center">
