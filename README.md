@@ -3,7 +3,7 @@
 
 <div align="center">
   <h3>Search, explore, and ask questions across arXiv papers</h3>
-  <p>A personal RAG project built around automated ingestion, hybrid retrieval, local generation, caching, and observability.</p>
+  <p>A personal RAG project built around automated ingestion, hybrid retrieval, local generation, caching, and observability. </p>
 </div>
 
 <p align="center">
